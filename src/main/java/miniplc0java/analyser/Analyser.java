@@ -287,8 +287,20 @@ public final class Analyser {
      */
     private void analyseExpression() throws CompileError {
     	analyseItem();
-    	while ((nextIf(TokenType.Plus)!= null)||(nextIf(TokenType.Minus)!= null)) {
-    		analyseItem();
+    	while (check(TokenType.Plus)||check(TokenType.Minus)) {
+    		int flag=0;
+    		if(nextIf(TokenType.Plus)!=null) {
+    			flag=1;
+    		}else if(nextIf(TokenType.Minus)!=null) {
+    			flag=0;
+    		}
+    		analyseFactor();
+    		if(flag==1) {
+    			instructions.add(new Instruction(Operation.ADD));
+    		}
+    		else {
+    			instructions.add(new Instruction(Operation.SUB));
+    		}
     	}
     }
     /*
@@ -301,6 +313,7 @@ public final class Analyser {
     	analyseExpression();
     	declareSymbol(nameToken.getValueString(),nameToken.getStartPos());
     	expect(TokenType.Semicolon);
+    	instructions.add(new Instruction(Operation.LIT,0 ));
     }
     /*
      * <输出语句> ::= 'print' '(' <表达式> ')' ';'
@@ -318,8 +331,20 @@ public final class Analyser {
      */
     private void analyseItem() throws CompileError {
     	analyseFactor();
-    	while ((nextIf(TokenType.Mult)!= null)||(nextIf(TokenType.Div)!= null)) {
+    	while (check(TokenType.Mult)||check(TokenType.Div)) {
+    		int flag=0;
+    		if(nextIf(TokenType.Mult)!=null) {
+    			flag=1;
+    		}else if(nextIf(TokenType.Div)!=null) {
+    			flag=0;
+    		}
     		analyseFactor();
+    		if(flag==1) {
+    			instructions.add(new Instruction(Operation.MUL));
+    		}
+    		else {
+    			instructions.add(new Instruction(Operation.DIV));
+    		}
     	}
     }
     /*
