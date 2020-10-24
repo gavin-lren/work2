@@ -74,7 +74,7 @@ public class Tokenizer {
     		it.nextChar();
     	}
     	String ob=new String(now);
-    	switch(ob) {
+    	switch(ob.toLowerCase()) {
     		case "begin":
     			return new Token(TokenType.Begin, "Begin", pre, it.currentPos());
     		case "end":
