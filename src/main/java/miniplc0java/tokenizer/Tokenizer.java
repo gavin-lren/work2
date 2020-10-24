@@ -75,16 +75,16 @@ public class Tokenizer {
     	}
     	String ob=new String(now);
     	switch(ob) {
-    		case "Begin":
-    			return new Token(TokenType.Begin, "begin", pre, it.currentPos());
-    		case "End":
-    			return new Token(TokenType.End, "end", pre, it.currentPos());
-    		case "Const":
-    			return new Token(TokenType.Const, "const", pre, it.currentPos());
-    		case "Var":
-    			return new Token(TokenType.Var, "var", pre, it.currentPos());
-    		case "Print":
-    			return new Token(TokenType.Print, "print", pre, it.currentPos());
+    		case "begin":
+    			return new Token(TokenType.Begin, "Begin", pre, it.currentPos());
+    		case "end":
+    			return new Token(TokenType.End, "End", pre, it.currentPos());
+    		case "const":
+    			return new Token(TokenType.Const, "Const", pre, it.currentPos());
+    		case "var":
+    			return new Token(TokenType.Var, "Var", pre, it.currentPos());
+    		case "print":
+    			return new Token(TokenType.Print, "Print", pre, it.currentPos());
     		default:
     			return new Token(TokenType.Ident, ob, pre, it.currentPos());
     	}
