@@ -222,13 +222,11 @@ public final class Analyser {
         while (nextIf(TokenType.Const) != null) {
             // 变量名
             var nameToken = expect(TokenType.Ident);
-
+            addSymbol(nameToken.getValueString(),true,true,nameToken.getStartPos());
             // 等于号
             expect(TokenType.Equal);
-
             // 常表达式
             analyseConstantExpression();
-
             // 分号
             expect(TokenType.Semicolon);
         }
@@ -241,34 +239,48 @@ public final class Analyser {
     	while (nextIf(TokenType.Var) != null) {
             // 变量名
             var nameToken = expect(TokenType.Ident);
-
+            addSymbol(nameToken.getValueString(),false,false,nameToken.getStartPos());
             // 等于号
-            expect(TokenType.Equal);
-
-            // 常表达式
-            analyseExpression();
-
+            if(nextIf(TokenType.Equal)!=null) {
+            	// 常表达式
+            	analyseExpression();
+            	
+            	declareSymbol(nameToken.getValueString(),nameToken.getStartPos());
+            }
             // 分号
-            expect(TokenType.Semicolon);
+        	expect(TokenType.Semicolon);
         }
     }
     /*
      * <语句序列> ::= {<语句>}
+     * <语句序列> ::= {<赋值语句>|<输出语句>|<空语句>}
+     * <语句序列> ::= {<标识符>'='<表达式>';'|'print' '(' <表达式> ')' ';'|';'}
      */
     private void analyseStatementSequence() throws CompileError {
-    	analyseStatement();
+    	while(nextIf(TokenType.Ident)!=null||nextIf(TokenType.Print)!=null||nextIf(TokenType.Semicolon)!=null) {
+    		analyseStatement();
+    	}
     }
     /*
      * <语句> ::= <赋值语句>|<输出语句>|<空语句> 
      */
     private void analyseStatement() throws CompileError {
-    	analyseAssignmentStatement();
+    	if(check(TokenType.Ident)) {
+    		analyseAssignmentStatement();
+		}else if(check(TokenType.Print)) {
+			analyseOutputStatement();
+		}else if(check(TokenType.Semicolon)) {
+			expect(TokenType.Semicolon);
+		}else {
+			throw new ExpectedTokenError(List.of(TokenType.Ident, TokenType.Print, TokenType.Semicolon), next());
+		}
     }
     /*
      * <常表达式> ::= [<符号>]<无符号整数>
      */
     private void analyseConstantExpression() throws CompileError {
-        throw new Error("Not implemented");
+    	if(nextIf(TokenType.Plus)!=null||nextIf(TokenType.Minus)!=null) {}
+    	expect(TokenType.Uint);
     }
     /*
      * <表达式> ::= <项>{<加法型运算符><项>}
@@ -283,9 +295,12 @@ public final class Analyser {
      * <赋值语句> ::= <标识符>'='<表达式>';'
      */
     private void analyseAssignmentStatement() throws CompileError {
-    	expect(TokenType.Ident);
+    	var nameToken = expect(TokenType.Ident);
+    	isConstant(nameToken.getValueString(), nameToken.getStartPos());
     	expect(TokenType.Equal);
     	analyseExpression();
+    	declareSymbol(nameToken.getValueString(),nameToken.getStartPos());
+    	expect(TokenType.Semicolon);
     }
     /*
      * <输出语句> ::= 'print' '(' <表达式> ')' ';'
