@@ -86,7 +86,7 @@ public class Tokenizer {
     		case "print":
     			return new Token(TokenType.Print, "print", pre, it.currentPos());
     	}
-    	return new Token(TokenType.Ident, ob, pre, it.currentPos());
+    	return new Token(TokenType.Ident, obs, pre, it.currentPos());
         // 尝试将存储的字符串解释为关键字
         // -- 如果是关键字，则返回关键字类型的 token
         // -- 否则，返回标识符
