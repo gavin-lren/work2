@@ -270,7 +270,7 @@ public final class Analyser {
     /*
      * <语句序列> ::= {<语句>}
      * <语句序列> ::= {<赋值语句>|<输出语句>|<空语句>}
-     * <语句序列> ::= {<标识符>'='<表达式>';'|'print' '(' <表达式> ')' ';'|';'}
+     * 
      */
     private void analyseStatementSequence() throws CompileError {
     	while (true) {
@@ -278,11 +278,9 @@ public final class Analyser {
             var peeked = peek();
             if (peeked.getTokenType() == TokenType.Ident) {
                 // 调用相应的分析函数
-            	expect(TokenType.Ident);
             	analyseAssignmentStatement();
                 // 如果遇到其他非终结符的 FIRST 集呢？
             } else if(peeked.getTokenType() == TokenType.Print){
-            	expect(TokenType.Print);
             	analyseOutputStatement();
             } else if(peeked.getTokenType() == TokenType.Semicolon){
             	expect(TokenType.Semicolon);
@@ -439,6 +437,5 @@ public final class Analyser {
         if (negate) {
             instructions.add(new Instruction(Operation.SUB));
         }
-        throw new Error("Not implemented");
     }
 }
