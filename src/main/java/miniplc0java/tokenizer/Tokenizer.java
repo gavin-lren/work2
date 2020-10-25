@@ -67,24 +67,23 @@ public class Tokenizer {
         // -- 前进一个字符，并存储这个字符
         //
     	Pos pre=it.currentPos();
-    	int top=0;
     	StringBuilder ob=new StringBuilder("");
     	while(Character.isDigit(it.peekChar())||Character.isAlphabetic(it.peekChar())){
     		ob.append(it.peekChar());
     		it.nextChar();
     	}
     	String obs=ob.toString();
-    	switch(obs) {
+    	switch(obs.toLowerCase()) {
     		case "begin":
-    			return new Token(TokenType.Begin, "begin", pre, it.currentPos());
-    		case "End":
-    			return new Token(TokenType.End, "End", pre, it.currentPos());
-    		case "Const":
-    			return new Token(TokenType.Const, "Const", pre, it.currentPos());
-    		case "Var":
-    			return new Token(TokenType.Var, "Var", pre, it.currentPos());
-    		case "Print":
-    			return new Token(TokenType.Print, "Print", pre, it.currentPos());
+    			return new Token(TokenType.Begin, obs, pre, it.currentPos());
+    		case "end":
+    			return new Token(TokenType.End, obs, pre, it.currentPos());
+    		case "const":
+    			return new Token(TokenType.Const, obs, pre, it.currentPos());
+    		case "var":
+    			return new Token(TokenType.Var, obs, pre, it.currentPos());
+    		case "print":
+    			return new Token(TokenType.Print, obs, pre, it.currentPos());
     	}
     	return new Token(TokenType.Ident, obs, pre, it.currentPos());
         // 尝试将存储的字符串解释为关键字
