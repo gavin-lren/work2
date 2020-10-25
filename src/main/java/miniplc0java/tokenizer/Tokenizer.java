@@ -68,26 +68,25 @@ public class Tokenizer {
         //
     	Pos pre=it.currentPos();
     	int top=0;
-    	char now[]=new char[1024];
+    	StringBuilder ob=new StringBuilder("");
     	while(Character.isDigit(it.peekChar())||Character.isAlphabetic(it.peekChar())){
-    		now[top++]=it.peekChar();
+    		ob.append(it.peekChar());
     		it.nextChar();
     	}
-    	String ob=new String(now);
-    	switch(ob.toLowerCase()) {
+    	String obs=ob.toString().toLowerCase();
+    	switch(obs) {
     		case "begin":
-    			return new Token(TokenType.Begin, "Begin", pre, it.currentPos());
+    			return new Token(TokenType.Begin, "begin", pre, it.currentPos());
     		case "end":
-    			return new Token(TokenType.End, "End", pre, it.currentPos());
+    			return new Token(TokenType.End, "end", pre, it.currentPos());
     		case "const":
-    			return new Token(TokenType.Const, "Const", pre, it.currentPos());
+    			return new Token(TokenType.Const, "const", pre, it.currentPos());
     		case "var":
-    			return new Token(TokenType.Var, "Var", pre, it.currentPos());
+    			return new Token(TokenType.Var, "var", pre, it.currentPos());
     		case "print":
-    			return new Token(TokenType.Print, "Print", pre, it.currentPos());
-    		default:
-    			return new Token(TokenType.Ident, ob, pre, it.currentPos());
+    			return new Token(TokenType.Print, "print", pre, it.currentPos());
     	}
+    	return new Token(TokenType.Ident, ob, pre, it.currentPos());
         // 尝试将存储的字符串解释为关键字
         // -- 如果是关键字，则返回关键字类型的 token
         // -- 否则，返回标识符
